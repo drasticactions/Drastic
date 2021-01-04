@@ -51,6 +51,7 @@
   <ItemGroup>
     <Compile Include="iOSPlatformProperties.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Renderers\DrasticEditorRenderer.cs" />
     <Compile Include="Renderers\HybridWebViewRenderer.cs" />
     <Compile Include="Tools\CommonContainerBuilder.cs" />
   </ItemGroup>
