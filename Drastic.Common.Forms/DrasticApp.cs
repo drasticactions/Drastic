@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 using Autofac;
 using Drastic.Common.Interfaces;
@@ -35,7 +36,10 @@ namespace Drastic.Common.Forms
             builder = Drastic.Common.Tools.CommonContainerBuilder.AddDefaultsToContainer(builder);
             builder = Drastic.Common.Tools.CommonFormsContainerBuilder.AddDefaultsToContainer(builder);
             Container = builder.Build();
-            MainPage = new ContentPage();
+            this.MainPage = new ContentPage();
+#if DEBUG
+            Xamarin.Forms.Xaml.Diagnostics.VisualDiagnostics.VisualTreeChanged += this.VisualDiagnostics_VisualTreeChanged;
+#endif
         }
 
         /// <summary>
@@ -49,6 +53,15 @@ namespace Drastic.Common.Forms
         protected override void OnStart()
         {
             base.OnStart();
+        }
+
+        private void VisualDiagnostics_VisualTreeChanged(object sender, Xamarin.Forms.Xaml.Diagnostics.VisualTreeChangeEventArgs e)
+        {
+            var parentSourInfo = Xamarin.Forms.Xaml.Diagnostics.VisualDiagnostics.GetXamlSourceInfo(e.Parent);
+            var childSourInfo = Xamarin.Forms.Xaml.Diagnostics.VisualDiagnostics.GetXamlSourceInfo(e.Child);
+            Debug.WriteLine($"VisualTreeChangeEventArgs {e.ChangeType}:" +
+                $"{e.Parent}:{parentSourInfo?.SourceUri}:{parentSourInfo?.LineNumber}:{parentSourInfo?.LinePosition}-->" +
+                $" {e.Child}:{childSourInfo?.SourceUri}:{childSourInfo?.LineNumber}:{childSourInfo?.LinePosition}");
         }
     }
 }
